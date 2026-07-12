@@ -224,25 +224,35 @@
      standing in for a cluttered stash resolving into order.
   ============================================================= */
   .block-hero{ padding:72px 0 56px; }
-  .hero-grid{ max-width:64ch; }
+  .hero-grid{ container-type:inline-size; }
   .hero-copy h1{
-    font-size:clamp(2.1rem, 4.2vw, 3.25rem);
-    line-height:1.08;
+    /* fallback for browsers without container-query support */
+    font-size:clamp(1.5rem, 4.6vw, 2.35rem);
+    line-height:1.15;
     letter-spacing:-.01em;
+    white-space:nowrap;
+  }
+  @supports (container-type: inline-size){
+    .hero-copy h1{
+      /* scales with the hero's own box, not the viewport —
+         stays proportional and never overflows at any width */
+      font-size:clamp(1.3rem, 3.3cqw, 2.4rem);
+    }
   }
   .hero-copy h1 em{ font-style:italic; color:var(--burgundy); }
   .hero-lede{
     font-size:1.08rem; color:var(--ink-soft); max-width:46ch; margin:1.1em 0 1.6em;
   }
-  .hero-actions{ display:flex; flex-wrap:wrap; gap:14px; align-items:center; }
+  .hero-copy{ text-align:center; }
+  .hero-actions{ display:flex; flex-wrap:wrap; justify-content:center; gap:14px; align-items:center; }
 
   /* ============================================================
      BLOCK: BUTTONS (shared)
   ============================================================= */
   .btn{
-    display:inline-flex; align-items:center; gap:10px;
+    display:inline-flex; align-items:center; justify-content:center; gap:10px;
     font-family:var(--font-label); font-size:.82rem; letter-spacing:.04em;
-    text-decoration:none; text-transform:uppercase;
+    text-decoration:none; text-transform:uppercase; text-align:center;
     padding:13px 22px; border-radius:var(--radius); border:1px solid transparent;
     transition:transform .12s ease, box-shadow .12s ease;
   }
@@ -324,9 +334,26 @@
   .site-footer a{ text-decoration:none; }
   .site-footer a:hover{ color:var(--burgundy); }
 
+  /* ============================================================
+     RESPONSIVE — two shared breakpoints used consistently across
+     every block: 860px (tablet) and 620px (phone). Font sizes
+     elsewhere use clamp()/cqw for continuous fluid scaling, so
+     these breakpoints only need to handle layout (columns,
+     spacing), not text-size cliffs.
+  ============================================================= */
   @media (max-width:860px){
-    .hero-grid{ grid-template-columns:1fr; }
+    .features-grid{ grid-template-columns:1fr 1fr; }
+    .block-hero{ padding:56px 0 44px; }
+    .block-features .wrap{ padding-top:44px; }
+    .block-faq{ padding:56px 0; }
+    .block-cta{ padding:48px 0; }
+  }
+
+  @media (max-width:620px){
+    .hero-copy h1{ white-space:normal !important; font-size:clamp(1.6rem, 7vw, 2.1rem) !important; }
     .features-grid{ grid-template-columns:1fr; }
+    .btn{ width:100%; }
+    .hero-actions{ flex-direction:column; align-items:stretch; }
   }
 
   @media (prefers-reduced-motion:reduce){
